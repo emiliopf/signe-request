@@ -93,7 +93,7 @@ const serverlessConfiguration: AWS = {
           },
           Policies: [
             {
-              PolicyName: 'RequestPutPolicy',
+              PolicyName: 'RequestGetPolicy',
               PolicyDocument: {
                 Version: '2012-10-17',
                 Statement: [
@@ -135,7 +135,7 @@ const serverlessConfiguration: AWS = {
           },
           Policies: [
             {
-              PolicyName: 'RequestPutPolicy',
+              PolicyName: 'RequestScanPolicy',
               PolicyDocument: {
                 Version: '2012-10-17',
                 Statement: [
@@ -151,7 +151,8 @@ const serverlessConfiguration: AWS = {
                     Action: 'dynamodb:Scan',
                     Resource: {
                       'Fn::Sub': 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${self:provider.environment.DYNAMODB_TABLE}'
-                    }                  }
+                    }                  
+                  }
                 ]
               }
             }
