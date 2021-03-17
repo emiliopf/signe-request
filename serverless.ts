@@ -22,7 +22,7 @@ const serverlessConfiguration: AWS = {
       shouldStartNameWithService: true,
     },
     environment: {
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
+      DYNAMODB_TABLE: 'SigneRequest'
     },
     lambdaHashingVersion: '20201221',
   },
@@ -60,7 +60,7 @@ const serverlessConfiguration: AWS = {
                   {
                     Effect: 'Allow',
                     Action: 'dynamodb:PutItem',
-                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/SigneRequest'
+                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
                   }
                 ]
               }
@@ -98,7 +98,7 @@ const serverlessConfiguration: AWS = {
                   {
                     Effect: 'Allow',
                     Action: 'dynamodb:GetItem',
-                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/SigneRequest'
+                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
                   }
                 ]
               }
@@ -136,7 +136,7 @@ const serverlessConfiguration: AWS = {
                   {
                     Effect: 'Allow',
                     Action: 'dynamodb:Scan',
-                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/SigneRequest'
+                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
                   }
                 ]
               }
@@ -148,7 +148,7 @@ const serverlessConfiguration: AWS = {
         Type: 'AWS::DynamoDB::Table',
         DeletionPolicy: 'Delete',
         Properties: {
-          TableName: 'SigneRequest',
+          TableName: '${self:provider.environment.DYNAMODB_TABLE}',
           KeySchema: [
             {
               AttributeName: 'id',
