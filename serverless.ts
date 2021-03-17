@@ -25,22 +25,125 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
     },
     lambdaHashingVersion: '20201221',
-    iam: {
-      role: {
-        statements: [
-          {
-            Effect: 'Allow',
-            Action: ['dynamodb:PutItem', 'dynamodb:GetItem', 'dynamodb:Scan'],
-            Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/SigneRequest'
-          }
-        ]
-      }
-    }
   },
   // import the function via paths
   functions: { put, get, scan },
   resources: {
     Resources: {
+      RequestPutRole : {
+        Type: 'AWS::IAM::Role',
+        Properties: {
+          RoleName: 'RequestPutRole',
+          AssumeRolePolicyDocument: {
+            Version: '2012-10-17',
+            Statement: {
+              Effect: 'Allow',
+              Principal: {
+                Service: [
+                  'lambda.amazonaws.com'
+                ]
+              },
+              Action: 'sts:AssumeRole',
+            }
+          },
+          Policies: [
+            {
+              PolicyName: 'RequestPutPolicy',
+              PolicyDocument: {
+                Version: '2012-10-17',
+                Statement: [
+                  {
+                    Effect: 'Allow',
+                    Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
+                    Resource: 'arn:aws:logs:*:*:*'
+                  },
+                  {
+                    Effect: 'Allow',
+                    Action: 'dynamodb:PutItem',
+                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/SigneRequest'
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      RequestGetRole : {
+        Type: 'AWS::IAM::Role',
+        Properties: {
+          RoleName: 'RequestGetRole',
+          AssumeRolePolicyDocument: {
+            Version: '2012-10-17',
+            Statement: {
+              Effect: 'Allow',
+              Principal: {
+                Service: [
+                  'lambda.amazonaws.com'
+                ]
+              },
+              Action: 'sts:AssumeRole',
+            }
+          },
+          Policies: [
+            {
+              PolicyName: 'RequestPutPolicy',
+              PolicyDocument: {
+                Version: '2012-10-17',
+                Statement: [
+                  {
+                    Effect: 'Allow',
+                    Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
+                    Resource: 'arn:aws:logs:*:*:*'
+                  },
+                  {
+                    Effect: 'Allow',
+                    Action: 'dynamodb:GetItem',
+                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/SigneRequest'
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      RequestScanRole : {
+        Type: 'AWS::IAM::Role',
+        Properties: {
+          RoleName: 'RequestScanRole',
+          AssumeRolePolicyDocument: {
+            Version: '2012-10-17',
+            Statement: {
+              Effect: 'Allow',
+              Principal: {
+                Service: [
+                  'lambda.amazonaws.com'
+                ]
+              },
+              Action: 'sts:AssumeRole',
+            }
+          },
+          Policies: [
+            {
+              PolicyName: 'RequestPutPolicy',
+              PolicyDocument: {
+                Version: '2012-10-17',
+                Statement: [
+                  {
+                    Effect: 'Allow',
+                    Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
+                    Resource: 'arn:aws:logs:*:*:*'
+                  },
+                  {
+                    Effect: 'Allow',
+                    Action: 'dynamodb:Scan',
+                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/SigneRequest'
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
       RequestDynamoDbTable: {
         Type: 'AWS::DynamoDB::Table',
         DeletionPolicy: 'Delete',
