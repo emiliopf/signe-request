@@ -16,6 +16,8 @@ const serverlessConfiguration: AWS = {
   plugins: ['serverless-webpack'],
   provider: {
     name: 'aws',
+    stage: 'dev',
+    region: 'eu-west-1',
     runtime: 'nodejs14.x',
     apiGateway: {
       minimumCompressionSize: 1024,
@@ -55,12 +57,17 @@ const serverlessConfiguration: AWS = {
                   {
                     Effect: 'Allow',
                     Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-                    Resource: 'arn:aws:logs:*:*:*'
+                    Resource: {
+                      //arn:partition:service:region:account-id:resource-type/resource-id
+                      'Fn::Sub': 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*'
+                    }
                   },
                   {
                     Effect: 'Allow',
                     Action: 'dynamodb:PutItem',
-                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
+                    Resource: {
+                      'Fn::Sub': 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${self:provider.environment.DYNAMODB_TABLE}'
+                    }
                   }
                 ]
               }
@@ -93,13 +100,16 @@ const serverlessConfiguration: AWS = {
                   {
                     Effect: 'Allow',
                     Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-                    Resource: 'arn:aws:logs:*:*:*'
+                    Resource: {
+                      'Fn::Sub': 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*'
+                    }
                   },
                   {
                     Effect: 'Allow',
                     Action: 'dynamodb:GetItem',
-                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
-                  }
+                    Resource: {
+                      'Fn::Sub': 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${self:provider.environment.DYNAMODB_TABLE}'
+                    }                  }
                 ]
               }
             }
@@ -131,13 +141,16 @@ const serverlessConfiguration: AWS = {
                   {
                     Effect: 'Allow',
                     Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
-                    Resource: 'arn:aws:logs:*:*:*'
+                    Resource: {
+                      'Fn::Sub': 'arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*'
+                    }
                   },
                   {
                     Effect: 'Allow',
                     Action: 'dynamodb:Scan',
-                    Resource: 'arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}'
-                  }
+                    Resource: {
+                      'Fn::Sub': 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${self:provider.environment.DYNAMODB_TABLE}'
+                    }                  }
                 ]
               }
             }
