@@ -109,7 +109,8 @@ const serverlessConfiguration: AWS = {
                     Action: 'dynamodb:GetItem',
                     Resource: {
                       'Fn::Sub': 'arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/${self:provider.environment.DYNAMODB_TABLE}'
-                    }                  }
+                    }                  
+                  }
                 ]
               }
             }
